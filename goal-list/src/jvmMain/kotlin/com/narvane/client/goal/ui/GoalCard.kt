@@ -1,7 +1,8 @@
 package com.narvane.client.goal.ui
 
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -14,17 +15,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.Canvas
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,124 +49,154 @@ fun GoalCard(
     onTitleChange: (String) -> Unit,
     onAddHourOption: () -> Unit,
     onHourPress: (index: Int, action: GoalHourPressAction) -> Unit,
-    onRemoveClick: () -> Unit,
     onRemoveLongPress: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val canAddHour = goal.hourOptions.size < GOAL_MAX_HOUR_OPTIONS
     val optionsScroll = rememberScrollState()
+    var removePressActive by remember(goal.id) { mutableStateOf(false) }
 
-    Card(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .height(76.dp),
-        shape = GoalLayout.cardShape,
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
-        BoxWithConstraints(
+        Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(76.dp)
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-        ) {
-            val leftColWidth = 40.dp
-            val rightColWidth = 40.dp
-            val middleWidthRaw = maxWidth - leftColWidth - rightColWidth - 16.dp
-            val middleColWidth = if (middleWidthRaw > 120.dp) middleWidthRaw else 120.dp
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .pointerInput(goal.id) {
-                        detectTapGestures(
-                            onLongPress = { onRemoveLongPress() },
-                        )
+                .fillMaxSize()
+                .then(
+                    if (removePressActive) {
+                        Modifier.drawBehind {
+                            drawRoundRect(
+                                color = Color(0xFFE05A6A),
+                                size = size,
+                                cornerRadius = CornerRadius(14.dp.toPx(), 14.dp.toPx()),
+                                style = Stroke(
+                                    width = 2.dp.toPx(),
+                                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f)),
+                                ),
+                            )
+                        }
+                    } else {
+                        Modifier
                     },
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                ),
+            shape = GoalLayout.cardShape,
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        ) {
+            BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
             ) {
-                Box(
-                    modifier = Modifier
-                        .width(leftColWidth)
-                        .height(60.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    EmojiTrigger(
-                        value = goal.emoji,
-                        onClick = onEmojiClick,
-                    )
-                }
+                val leftColWidth = 40.dp
+                val middleWidthRaw = maxWidth - leftColWidth - 8.dp
+                val middleColWidth = if (middleWidthRaw > 120.dp) middleWidthRaw else 120.dp
 
-                Column(
+                Row(
                     modifier = Modifier
-                        .width(middleColWidth)
-                        .height(60.dp),
-                    verticalArrangement = Arrangement.Center,
+                        .fillMaxSize()
+                        .pointerInput(goal.id) {
+                            detectTapGestures(
+                                onPress = {
+                                    removePressActive = true
+                                    tryAwaitRelease()
+                                    removePressActive = false
+                                },
+                                onLongPress = { onRemoveLongPress() },
+                            )
+                        },
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(24.dp),
-                        contentAlignment = Alignment.CenterStart,
+                            .width(leftColWidth)
+                            .height(60.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        BasicTextField(
-                            value = goal.title,
-                            onValueChange = onTitleChange,
-                            singleLine = true,
-                            textStyle = TextStyle(
-                                color = Color(0xFF1B2335),
-                                fontWeight = FontWeight.SemiBold,
-                            ),
-                            modifier = Modifier.fillMaxWidth(),
-                            decorationBox = { inner ->
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.CenterStart,
-                                ) {
-                                    if (goal.title.isBlank()) {
-                                        Text(text = "Add goal", color = Color(0xFF93A1BA))
-                                    }
-                                    inner()
-                                }
-                            },
+                        EmojiTrigger(
+                            value = goal.emoji,
+                            onClick = onEmojiClick,
                         )
                     }
 
-                    Row(
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(26.dp)
-                            .horizontalScroll(optionsScroll),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                            .width(middleColWidth)
+                            .height(60.dp),
+                        verticalArrangement = Arrangement.Center,
                     ) {
-                        goal.hourOptions.forEachIndexed { index, minutes ->
-                            GoalHourPill(
-                                minutes = minutes,
-                                compact = true,
-                                onAction = { action -> onHourPress(index, action) },
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(24.dp),
+                            contentAlignment = Alignment.CenterStart,
+                        ) {
+                            BasicTextField(
+                                value = goal.title,
+                                onValueChange = onTitleChange,
+                                singleLine = true,
+                                textStyle = TextStyle(
+                                    color = Color(0xFF1B2335),
+                                    fontWeight = FontWeight.SemiBold,
+                                ),
+                                modifier = Modifier.fillMaxWidth(),
+                                decorationBox = { inner ->
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.CenterStart,
+                                    ) {
+                                        if (goal.title.isBlank()) {
+                                            Text(text = "Add goal", color = Color(0xFF93A1BA))
+                                        }
+                                        inner()
+                                    }
+                                },
                             )
                         }
 
-                        AddHourOptionButton(
-                            enabled = canAddHour,
-                            compact = true,
-                            onClick = onAddHourOption,
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(26.dp)
+                                .horizontalScroll(optionsScroll),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            goal.hourOptions.forEachIndexed { index, minutes ->
+                                GoalHourPill(
+                                    minutes = minutes,
+                                    compact = true,
+                                    onAction = { action -> onHourPress(index, action) },
+                                )
+                            }
+
+                            AddHourOptionButton(
+                                enabled = canAddHour,
+                                compact = true,
+                                onClick = onAddHourOption,
+                            )
+                        }
                     }
                 }
-
-                Box(
-                    modifier = Modifier
-                        .width(rightColWidth)
-                        .height(60.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    RemoveGoalButton(onClick = onRemoveClick)
-                }
             }
+        }
+
+        if (removePressActive) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(1.dp)
+                    .drawBehind {
+                        drawRoundRect(
+                            color = Color(0x55E05A6A),
+                            size = size,
+                            cornerRadius = CornerRadius(13.dp.toPx(), 13.dp.toPx()),
+                        )
+                    },
+            )
         }
     }
 }
@@ -201,11 +239,7 @@ private fun AddHourOptionButton(
     val iconSize = if (compact) 11.dp else 14.dp
 
     Card(
-        modifier = Modifier
-            .size(buttonSize)
-            .then(
-                if (enabled) Modifier else Modifier,
-            ),
+        modifier = Modifier.size(buttonSize),
         shape = GoalLayout.addHourShape,
         colors = CardDefaults.cardColors(
             containerColor = if (enabled) Color(0xFFEFF4FC) else Color(0xFFF5F7FB),
@@ -233,44 +267,6 @@ private fun AddHourOptionButton(
                     color = Color(0xFF5A6D90),
                     start = androidx.compose.ui.geometry.Offset(centerX, centerY - half),
                     end = androidx.compose.ui.geometry.Offset(centerX, centerY + half),
-                    strokeWidth = stroke,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun RemoveGoalButton(
-    onClick: () -> Unit,
-) {
-    Card(
-        modifier = Modifier.size(32.dp),
-        shape = GoalLayout.addHourShape,
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEFF2)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        onClick = onClick,
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            Canvas(modifier = Modifier.size(14.dp)) {
-                val stroke = 2.dp.toPx()
-                val centerX = size.width / 2f
-                val centerY = size.height / 2f
-                val half = size.width * 0.34f
-
-                drawLine(
-                    color = Color(0xFFB34A5A),
-                    start = androidx.compose.ui.geometry.Offset(centerX - half, centerY - half),
-                    end = androidx.compose.ui.geometry.Offset(centerX + half, centerY + half),
-                    strokeWidth = stroke,
-                )
-                drawLine(
-                    color = Color(0xFFB34A5A),
-                    start = androidx.compose.ui.geometry.Offset(centerX - half, centerY + half),
-                    end = androidx.compose.ui.geometry.Offset(centerX + half, centerY - half),
                     strokeWidth = stroke,
                 )
             }

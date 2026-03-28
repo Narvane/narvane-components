@@ -94,12 +94,6 @@ fun GoalList(
                     onHourPress = { index, action ->
                         commit { current -> applyHourOptionPress(current, goal.id, index, action) }
                     },
-                    onRemoveClick = {
-                        commit { current -> removeGoal(current, goal.id) }
-                        if (pickerGoalId == goal.id) {
-                            pickerGoalId = null
-                        }
-                    },
                     onRemoveLongPress = {
                         commit { current -> removeGoal(current, goal.id) }
                         if (pickerGoalId == goal.id) {
