@@ -1,0 +1,24 @@
+---
+description: Always load Developer DNA before and after coding
+alwaysApply: true
+---
+
+# Developer DNA Mandatory Loop
+
+Before any development task:
+
+1. Read `developer_DNA.md` completely.
+2. Extract 3-5 constraints that are most relevant to the requested change.
+3. State how the planned edits preserve chunking, naming clarity, and progressive disclosure.
+
+During implementation:
+
+1. Keep boundaries explicit (`model`, `logic`, `layout`, `ui` when applicable).
+2. Avoid repeated naming when context already provides meaning.
+3. Preserve scannable structure and coherent abstraction level per folder/file.
+
+After implementation and before final answer:
+
+1. Re-read `developer_DNA.md`.
+2. Run a self-review against: naming noise, abstraction mismatch, sibling overload, entrypoint coherence.
+3. If misaligned, refactor before concluding.

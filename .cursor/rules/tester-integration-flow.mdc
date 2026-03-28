@@ -1,0 +1,15 @@
+---
+description: Rules for adding components to the tester app
+globs: "src/jvmMain/kotlin/com/narvane/components/**/*.kt"
+alwaysApply: false
+---
+
+# Tester Integration Flow
+
+When adding a new component to the tester:
+
+1. Register one `ComponentMenuItem` in `ComponentsTesterApp`.
+2. Feed the component with sample state from `src/jvmMain/kotlin/com/narvane/sampledata`.
+3. Keep `ComponentMenuList` and `ComponentPreviewScreen` generic (do not hardcode component-specific logic there).
+4. Ensure the new item title is stable and unique (used as selection key).
+5. Keep preview wiring thin: instantiate component and callbacks only.

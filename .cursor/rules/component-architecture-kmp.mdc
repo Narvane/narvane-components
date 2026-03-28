@@ -1,0 +1,19 @@
+---
+description: Kotlin component architecture for this repository
+globs: "**/*.kt"
+alwaysApply: false
+---
+
+# Component Architecture (KMP + Compose)
+
+When creating or refactoring components:
+
+1. Build a dedicated module per complex component (example: `:day-planner`).
+2. Keep component internals organized by responsibility:
+   - `model` for public state/actions/types.
+   - `logic` for reducers/rules/state transitions.
+   - `layout` for placement/math.
+   - `ui` for composables and interaction rendering.
+3. Component root composable should expose a small host interface (input state + targeted callbacks), while keeping interaction mechanics internal.
+4. Keep test app entry simple: component catalog + preview wrapper; avoid business logic there.
+5. Prefer composition roots that read like architecture, not procedural scripts.
