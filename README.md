@@ -2,6 +2,14 @@
 
 Base project to design and evolve complex reusable components for real applications.
 
+## Stack mandate
+
+This repository is implemented in **Kotlin Multiplatform + Compose**.
+
+- New components must be created in Kotlin modules (for Android + Desktop).
+- Do not implement components in React/TypeScript inside this repository.
+- Every new component must be wired into `ComponentsTesterApp` for preview/testing.
+
 ## Core idea
 
 This repository exists so I can design complex components to use in my applications without creating a fully closed "parallel world."

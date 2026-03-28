@@ -10,7 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.narvane.client.day.ui.DayPlanner
+import com.narvane.client.goal.ui.GoalList
 import com.narvane.sampledata.DayPlannerSampleData
+import com.narvane.sampledata.GoalListSampleData
 
 data class ComponentMenuItem(
     val title: String,
@@ -32,6 +34,20 @@ fun ComponentsTesterApp() {
                             outOfRange.forEach { event ->
                                 println(event)
                             }
+                        },
+                    )
+                },
+            ),
+            ComponentMenuItem(
+                title = "Goal List",
+                content = {
+                    var demoGoals by remember { mutableStateOf(GoalListSampleData.defaultGoals()) }
+                    GoalList(
+                        goals = demoGoals,
+                        modifier = Modifier.fillMaxSize(),
+                        onChange = { updated ->
+                            demoGoals = updated
+                            println("Goal list updated (${updated.size} goals)")
                         },
                     )
                 },

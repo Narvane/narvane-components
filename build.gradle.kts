@@ -23,6 +23,7 @@ kotlin {
             kotlin.srcDir("src/jvmMain/kotlin/com/narvane/sampledata")
             dependencies {
                 implementation(project(":day-planner"))
+                implementation(project(":goal-list"))
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)

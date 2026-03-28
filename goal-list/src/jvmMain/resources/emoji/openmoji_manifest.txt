@@ -1,0 +1,32 @@
+OpenMoji-style curated catalog mapping (GoalList)
+Format: assetKey=unicode
+
+openmoji_work_cleaning=🧹
+openmoji_work_meeting=📅
+openmoji_work_focus=💻
+openmoji_work_finance=💼
+openmoji_work_calls=📞
+
+openmoji_home_cooking=🍳
+openmoji_home_groceries=🛒
+openmoji_home_laundry=🧺
+openmoji_home_repair=🔧
+openmoji_home_plants=🪴
+
+openmoji_health_workout=🏋️
+openmoji_health_run=🏃
+openmoji_health_sleep=😴
+openmoji_health_water=💧
+openmoji_health_meditate=🧘
+
+openmoji_study_reading=📚
+openmoji_study_notes=📝
+openmoji_study_language=🗣️
+openmoji_study_idea=💡
+openmoji_study_exam=✅
+
+openmoji_personal_family=👨‍👩‍👧
+openmoji_personal_friend=🤝
+openmoji_personal_hobby=🎨
+openmoji_personal_music=🎵
+openmoji_personal_travel=✈️

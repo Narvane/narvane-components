@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "narvane-components"
 include(":day-planner")
+include(":goal-list")

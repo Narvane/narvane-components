@@ -9,6 +9,9 @@
 - Main desktop: `src/jvmMain/kotlin/com/example/components/Main.kt`
 - Sample data no root source: `src/jvmMain/kotlin/com/example/sampledata/DayPlannerSampleData.kt`
 
+> Observacao: este repositorio adota Kotlin Multiplatform + Compose para componentes.
+> Componentes novos devem ser adicionados ao `ComponentsTesterApp` para teste visual.
+
 ## Como rodar no IntelliJ
 
 1. Abra a pasta no IntelliJ e espere sincronizar o Gradle.

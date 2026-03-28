@@ -2,6 +2,13 @@
 
 Este documento extrai a essencia da estrutura atual para criar novos componentes no mesmo estilo.
 
+## 0) Escopo tecnologico (obrigatorio)
+
+- Este repositorio usa **Kotlin Multiplatform + Compose**.
+- A implementacao de componentes aqui deve ser feita em Kotlin (Android + Desktop).
+- Nao criar componentes em React/TypeScript neste projeto.
+- Todo novo componente deve ser registrado no `ComponentsTesterApp` para teste visual.
+
 ## 1) Arquitetura base observada
 
 - App testadora no root (`src/.../components`) para navegar e visualizar componentes.
@@ -44,6 +51,7 @@ Regra pratica:
 5. Conectar no tester:
    - registrar `ComponentMenuItem` em `ComponentsTesterApp`;
    - usar sample data para renderizacao inicial.
+   - garantir que o item abre preview funcional no app testador (Desktop e Android quando aplicavel).
 
 ## 4) Checklist de qualidade (antes de concluir)
 

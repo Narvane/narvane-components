@@ -13,6 +13,12 @@ Este guia define como usar a IA neste projeto com base no seu `developer_DNA.md`
 4. Revisao final:
    - "Releia `developer_DNA.md` e faca uma auto-revisao de coerencia arquitetural."
 
+### Nota obrigatoria de stack
+
+- Este repositorio e Kotlin Multiplatform + Compose.
+- Solicitações de componente no formato React/TypeScript devem ser traduzidas para Kotlin/Compose.
+- Sempre integrar componente novo no `ComponentsTesterApp` com sample data.
+
 ## 2) Prompt base (copiar e colar)
 
 ```text
